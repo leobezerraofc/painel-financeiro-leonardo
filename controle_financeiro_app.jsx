@@ -1,4 +1,3 @@
-// Aplicativo de Controle Financeiro Pessoal para Leonardo
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,17 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Upload } from 'lucide-react';
-import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 export default function FinanceDashboard() {
   const [faturas, setFaturas] = useState([]);
-  const [gasto, setGasto] = useState({ categoria: '', valor: '', descricao: '' });
+  const [gasto, setGasto] = useState({ categoria: '', valor: 0, descricao: '' });
   const [gastos, setGastos] = useState([]);
   const [metaReserva, setMetaReserva] = useState(5000);
 
   function handleAddGasto() {
-    setGastos([...gastos, gasto]);
-    setGasto({ categoria: '', valor: '', descricao: '' });
+    if (gasto.valor && !isNaN(gasto.valor)) {
+      setGastos([...gastos, gasto]);
+      setGasto({ categoria: '', valor: 0, descricao: '' });
+    } else {
+      alert('Por favor, insira um valor válido.');
+    }
   }
 
   function handleFaturaUpload(event) {
@@ -70,7 +73,7 @@ export default function FinanceDashboard() {
                 <Input
                   type="number"
                   value={gasto.valor}
-                  onChange={e => setGasto({ ...gasto, valor: e.target.value })}
+                  onChange={e => setGasto({ ...gasto, valor: parseFloat(e.target.value) })}
                 />
               </div>
               <div className="grid gap-2">
